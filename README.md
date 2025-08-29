@@ -1,0 +1,196 @@
+# AI Chat CLI
+
+A powerful command-line chatbot powered by Google's Gemini AI. Chat with AI directly from your terminal!
+
+## Features
+
+- 🤖 Interactive chat sessions with Google Gemini
+- 🔐 Secure API key storage
+- 💬 Single message mode for quick questions
+- 🎨 Beautiful colored terminal output
+- ⚙️ Easy configuration management
+- 🌐 Global CLI access
+
+## Prerequisites
+
+- Node.js 14.0.0 or higher
+- A Google API key for Gemini API
+
+## Getting Your Google API Key
+
+1. Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
+2. Sign in with your Google account
+3. Click "Create API key"
+4. Copy the generated API key
+
+## Installation
+
+### Option 1: Global Installation (Recommended)
+
+```bash
+# Install dependencies
+npm install
+
+# Install globally
+npm install -g .
+```
+
+After global installation, you can use `ai-chat` from anywhere in your terminal.
+
+### Option 2: Local Installation
+
+```bash
+# Install dependencies
+npm install
+
+# Use with npm start or node
+npm start
+# or
+node bin/cli.js
+```
+
+## Quick Start
+
+1. **First-time setup:**
+   ```bash
+   ai-chat setup
+   ```
+   This will guide you through the initial configuration.
+
+2. **Start chatting:**
+   ```bash
+   ai-chat chat
+   ```
+
+3. **Ask a single question:**
+   ```bash
+   ai-chat ask "What is artificial intelligence?"
+   ```
+
+## Usage
+
+### Commands
+
+- `ai-chat chat` - Start an interactive chat session (default command)
+- `ai-chat ask <message>` - Send a single message and get a response
+- `ai-chat setup` - Interactive first-time setup
+- `ai-chat config [options]` - Manage configuration
+- `ai-chat --help` - Show help information
+
+### Configuration Options
+
+```bash
+# Set API key
+ai-chat config --key YOUR_API_KEY
+
+# Set model (default: gemini-2.0-flash-exp)
+ai-chat config --model gemini-2.0-flash-exp
+
+# Show current configuration
+ai-chat config --show
+
+# Clear all configuration
+ai-chat config --clear
+```
+
+### Interactive Chat Mode
+
+In interactive mode, you can:
+- Have ongoing conversations with context
+- Type `exit` or `quit` to end the session
+- Use Ctrl+C to interrupt at any time
+
+Example:
+```
+🤖 AI Chat CLI - Interactive Mode
+Type "exit" or "quit" to end the conversation
+
+✓ Connected to Google Gemini API
+
+You: Hello! What can you help me with?
+AI: Hello! I'm an AI assistant powered by Google's Gemini. I can help you with a wide variety of tasks...
+
+You: exit
+Goodbye! 👋
+```
+
+### Single Message Mode
+
+Perfect for quick questions or scripting:
+
+```bash
+ai-chat ask "Explain quantum computing in simple terms"
+ai-chat ask "Write a Python function to sort a list"
+ai-chat ask "What's the weather like?" # Note: AI can't access real-time data
+```
+
+## Configuration Storage
+
+Your API key and settings are stored securely using the `conf` package:
+- **Windows:** `%APPDATA%/ai-chat-cli-nodejs/config.json`
+- **macOS:** `~/Library/Preferences/ai-chat-cli-nodejs/config.json`
+- **Linux:** `~/.config/ai-chat-cli-nodejs/config.json`
+
+## Troubleshooting
+
+### Common Issues
+
+1. **"No API key configured" error:**
+   ```bash
+   ai-chat config --key YOUR_GOOGLE_API_KEY
+   ```
+
+2. **"Invalid API key" error:**
+   - Verify your API key is correct
+   - Ensure the Gemini API is enabled in your Google Cloud project
+   - Check that your API key has the necessary permissions
+
+3. **"API quota exceeded" error:**
+   - Check your Google Cloud billing settings
+   - Monitor your API usage in the Google Cloud Console
+
+4. **Network connectivity issues:**
+   - Check your internet connection
+   - Verify you can access Google's services
+   - Consider firewall/proxy settings
+
+### Getting Help
+
+If you encounter issues:
+1. Run `ai-chat config --show` to verify your configuration
+2. Check the [Google AI Studio documentation](https://ai.google.dev/docs)
+3. Ensure your API key has the correct permissions
+
+## Examples
+
+### Development Assistance
+```bash
+ai-chat ask "How do I implement a binary search in JavaScript?"
+ai-chat ask "Explain the differences between REST and GraphQL"
+```
+
+### Learning and Education
+```bash
+ai-chat ask "Explain machine learning concepts"
+ai-chat ask "What are design patterns in software engineering?"
+```
+
+### Writing Help
+```bash
+ai-chat ask "Help me write a professional email"
+ai-chat ask "Proofread this text: [your text]"
+```
+
+## Security Notes
+
+- Your API key is stored locally and never shared
+- The tool only communicates with Google's official Gemini API
+- No conversation data is stored permanently
+
+## Contributing
+
+Feel free to submit issues and enhancement requests!
+
+## License
+
+MIT License - see LICENSE file for details.
