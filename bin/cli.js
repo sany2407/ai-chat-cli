@@ -47,6 +47,35 @@ program
         await chatInterface.sendSingleMessage(message);
     });
 
+// Analyze current directory
+program
+    .command('analyze')
+    .description('Analyze the current project directory and provide insights')
+    .option('-d, --detailed', 'Provide detailed analysis')
+    .action(async (options) => {
+        if (!configManager.hasApiKey()) {
+            console.error(chalk.red('✗ No API key configured.'));
+            console.log(chalk.yellow('Please set your Google API key first:'));
+            console.log(chalk.cyan('ai-chat config --key YOUR_API_KEY'));
+            process.exit(1);
+        }
+
+        const FileContextManager = require('../src/fileContext');
+        const fileContext = new FileContextManager();
+        
+        if (!fileContext.hasRelevantFiles()) {
+            console.log(chalk.yellow('⚠️  No relevant project files found in current directory.'));
+            console.log(chalk.gray('Make sure you\'re in a project directory with code files.'));
+            return;
+        }
+
+        const analysisPrompt = options.detailed 
+            ? 'Please provide a detailed analysis of this project including architecture, dependencies, code quality, potential improvements, and any issues you notice.'
+            : 'Please analyze this project structure and provide a summary of what this project does, its main technologies, and any notable observations.';
+            
+        await chatInterface.sendSingleMessage(analysisPrompt);
+    });
+
 // Configuration commands
 const configCommand = program
     .command('config')
@@ -148,6 +177,8 @@ program.on('--help', () => {
     console.log('  ai-chat config --show                   # Show current config');
     console.log('  ai-chat chat                            # Start interactive chat');
     console.log('  ai-chat ask "What is machine learning?" # Send single message');
+    console.log('  ai-chat analyze                         # Analyze current project');
+    console.log('  ai-chat analyze --detailed              # Detailed project analysis');
     console.log('');
     console.log(chalk.blue('Get your Google API key from:'));
     console.log('https://makersuite.google.com/app/apikey');

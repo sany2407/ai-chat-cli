@@ -2,13 +2,16 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 const inquirer = require('inquirer');
 const chalk = require('chalk');
 const ConfigManager = require('./config');
+const FileContextManager = require('./fileContext');
 
 class ChatInterface {
     constructor() {
         this.configManager = new ConfigManager();
+        this.fileContextManager = new FileContextManager();
         this.genAI = null;
         this.model = null;
         this.chat = null;
+        this.contextEnabled = false;
     }
 
     /**
@@ -82,6 +85,32 @@ class ChatInterface {
     }
 
     /**
+     * Check if message needs context and process accordingly
+     * @param {string} message - User message
+     * @returns {Promise<string>} Processed message (with context if needed)
+     */
+    async processMessageWithContext(message) {
+        // Keywords that suggest the user wants project context
+        const contextKeywords = [
+            'project', 'code', 'file', 'files', 'repository', 'repo', 'structure',
+            'implement', 'fix', 'bug', 'function', 'class', 'component', 'module',
+            'package.json', 'readme', 'config', 'setup', 'build', 'test',
+            'explain this', 'analyze', 'review', 'refactor', 'improve'
+        ];
+        
+        const lowerMessage = message.toLowerCase();
+        const needsContext = contextKeywords.some(keyword => lowerMessage.includes(keyword)) ||
+                           this.fileContextManager.hasRelevantFiles();
+        
+        if (needsContext) {
+            console.log(chalk.gray('\n📁 Including project context for better assistance...'));
+            return this.fileContextManager.getContextAwarePrompt(message);
+        }
+        
+        return message;
+    }
+
+    /**
      * Start an interactive chat session
      */
     async startInteractiveChat() {
@@ -89,7 +118,14 @@ class ChatInterface {
         this.displayBanner();
         
         console.log(chalk.green('🤖 Interactive Mode'));
-        console.log(chalk.gray('Type "exit" or "quit" to end the conversation\n'));
+        console.log(chalk.gray('Type "exit" or "quit" to end the conversation'));
+        
+        // Check if current directory has project files
+        const hasFiles = this.fileContextManager.hasRelevantFiles();
+        if (hasFiles) {
+            console.log(chalk.blue('📁 Project files detected! I can help with project-specific questions.'));
+        }
+        console.log();
 
         try {
             await this.initialize();
@@ -98,7 +134,11 @@ class ChatInterface {
             
             // Send welcome message
             console.log(chalk.blue('🌟 Welcome! I\'m your AI assistant powered by Google\'s Gemini 2.0 Flash.'));
-            console.log(chalk.blue('I can help with coding, writing, analysis, creative tasks, and much more!'));
+            if (hasFiles) {
+                console.log(chalk.blue('I can analyze your project files and answer questions about your code!'));
+            } else {
+                console.log(chalk.blue('I can help with coding, writing, analysis, creative tasks, and much more!'));
+            }
             console.log(chalk.gray('What would you like to talk about today?\n'));
         } catch (error) {
             console.error(chalk.red('✗ Failed to initialize:'), error.message);
@@ -131,7 +171,9 @@ class ChatInterface {
                 process.stdout.write(chalk.gray('🤔 Thinking...'));
 
                 try {
-                    const response = await this.sendMessage(message);
+                    // Process message with context if needed
+                    const processedMessage = await this.processMessageWithContext(message);
+                    const response = await this.sendMessage(processedMessage);
                     
                     // Clear the thinking indicator
                     process.stdout.write('\r' + ' '.repeat(20) + '\r');
@@ -166,7 +208,9 @@ class ChatInterface {
             console.log(chalk.blue('You:'), message);
             console.log(chalk.gray('🤔 Thinking...'));
             
-            const response = await this.sendMessage(message);
+            // Process message with context if needed
+            const processedMessage = await this.processMessageWithContext(message);
+            const response = await this.sendMessage(processedMessage);
             console.log(chalk.green('AI:'), response);
         } catch (error) {
             console.error(chalk.red('✗ Error:'), error.message);

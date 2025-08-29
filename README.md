@@ -5,8 +5,10 @@ A powerful command-line chatbot powered by Google's Gemini AI. Chat with AI dire
 ## Features
 
 - 🤖 Interactive chat sessions with Google Gemini
+- 📁 **File context awareness** - Analyzes your project files for relevant responses
 - 🔐 Secure API key storage
 - 💬 Single message mode for quick questions
+- 🔍 Project analysis and code review capabilities
 - 🎨 Beautiful colored terminal output
 - ⚙️ Easy configuration management
 - 🌐 Global CLI access
@@ -73,6 +75,8 @@ node bin/cli.js
 
 - `ai-chat chat` - Start an interactive chat session (default command)
 - `ai-chat ask <message>` - Send a single message and get a response
+- `ai-chat analyze` - Analyze current project directory
+- `ai-chat analyze --detailed` - Detailed project analysis
 - `ai-chat setup` - Interactive first-time setup
 - `ai-chat config [options]` - Manage configuration
 - `ai-chat --help` - Show help information
@@ -123,6 +127,58 @@ ai-chat ask "Explain quantum computing in simple terms"
 ai-chat ask "Write a Python function to sort a list"
 ai-chat ask "What's the weather like?" # Note: AI can't access real-time data
 ```
+
+## 📁 File Context Features
+
+**AI Chat CLI can automatically analyze your project files to provide context-aware responses!**
+
+### Automatic Context Detection
+
+When you're in a project directory, the CLI automatically:
+- Scans for relevant code files (`.js`, `.py`, `.java`, `.cpp`, etc.)
+- Reads configuration files (`package.json`, `README.md`, etc.)
+- Excludes unnecessary files (`node_modules`, `.git`, etc.)
+- Provides project context to the AI for better responses
+
+### Project Analysis
+
+```bash
+# Analyze your current project
+ai-chat analyze
+
+# Get detailed analysis with recommendations
+ai-chat analyze --detailed
+```
+
+### Context-Aware Questions
+
+Ask questions about your project and get relevant answers:
+
+```bash
+# The AI will automatically include your project files as context
+ai-chat ask "How can I improve this code?"
+ai-chat ask "What does this project do?"
+ai-chat ask "How do I add a new feature?"
+ai-chat ask "Are there any bugs in my code?"
+ai-chat ask "How do I set up this project?"
+```
+
+### Supported File Types
+
+- **Code:** `.js`, `.jsx`, `.ts`, `.tsx`, `.py`, `.java`, `.cpp`, `.c`, `.cs`, `.php`, `.rb`, `.go`, `.rs`, `.swift`, etc.
+- **Web:** `.html`, `.css`, `.scss`, `.sass`
+- **Config:** `.json`, `.yaml`, `.yml`, `.toml`, `.ini`
+- **Documentation:** `.md`, `.txt`, `.rst`
+- **Scripts:** `.sh`, `.bat`, `.ps1`
+- **Other:** `.sql`, `.dockerfile`, `.gitignore`
+
+### How It Works
+
+1. **Smart Detection:** The CLI detects when you ask project-related questions
+2. **File Scanning:** Scans your directory for relevant files (up to 200KB total)
+3. **Context Building:** Creates a structured context with file contents
+4. **Enhanced Prompts:** Sends your question along with project context to the AI
+5. **Relevant Responses:** Get answers that are specific to your project structure and code
 
 ## Configuration Storage
 
