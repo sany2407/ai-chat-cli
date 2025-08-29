@@ -4,11 +4,12 @@ A powerful command-line chatbot powered by Google's Gemini AI. Chat with AI dire
 
 ## Features
 
-- 🤖 Interactive chat sessions with Google Gemini
+- 🤖 Interactive chat sessions with Google Gemini 2.0 Flash
+- 🧠 **Smart Context Detection** - Automatically determines when to use project context vs. general knowledge
 - 📁 **File context awareness** - Analyzes your project files for relevant responses
 - 🔐 Secure API key storage
 - 💬 Single message mode for quick questions
-- 🔍 Project analysis and code review capabilities
+- 🔍 Enhanced project analysis with structured insights
 - 🎨 Beautiful colored terminal output
 - ⚙️ Easy configuration management
 - 🌐 Global CLI access
@@ -128,9 +129,45 @@ ai-chat ask "Write a Python function to sort a list"
 ai-chat ask "What's the weather like?" # Note: AI can't access real-time data
 ```
 
+## 🧠 Smart Context Detection
+
+**AI Chat CLI intelligently determines when to use project context vs. general knowledge!**
+
+The CLI automatically analyzes your questions and decides whether to:
+- **Include Project Context**: For questions about your code, files, or project
+- **Use General Knowledge**: For questions about concepts, definitions, or general topics
+
+### Examples
+
+**General Questions (No Project Context):**
+```bash
+ai-chat ask "What is artificial intelligence?"
+ai-chat ask "Explain machine learning"
+ai-chat ask "What are the benefits of Python?"
+ai-chat ask "How does blockchain work?"
+```
+
+**Project-Specific Questions (Includes Context):**
+```bash
+ai-chat ask "What does this project do?"
+ai-chat ask "How can I improve my code?"
+ai-chat ask "Analyze this repository"
+ai-chat ask "Fix the bugs in this project"
+ai-chat ask "Explain this code structure"
+ai-chat ask "How do I run this project?"
+```
+
+### How Smart Detection Works
+
+The CLI uses intelligent pattern matching to determine context needs:
+
+- **General Knowledge Triggers**: "What is...", "Define...", "Explain [concept]...", "Tell me about..."
+- **Project Context Triggers**: "This project...", "My code...", "Analyze this...", "How does this work..."
+- **Keyword Detection**: Looks for project-related terms like "implement", "fix", "refactor", "package.json", etc.
+
 ## 📁 File Context Features
 
-**AI Chat CLI can automatically analyze your project files to provide context-aware responses!**
+**When project context is detected, the CLI provides enhanced project-aware responses!**
 
 ### Automatic Context Detection
 
@@ -140,15 +177,29 @@ When you're in a project directory, the CLI automatically:
 - Excludes unnecessary files (`node_modules`, `.git`, etc.)
 - Provides project context to the AI for better responses
 
-### Project Analysis
+### Enhanced Project Analysis
 
 ```bash
-# Analyze your current project
+# Quick project analysis with summary
 ai-chat analyze
 
-# Get detailed analysis with recommendations
+# Comprehensive analysis with detailed insights
 ai-chat analyze --detailed
 ```
+
+**Basic Analysis includes:**
+- Project summary and purpose
+- Technologies and dependencies
+- Code structure overview
+- Notable observations
+
+**Detailed Analysis includes:**
+- Complete project overview
+- Technical architecture analysis
+- Code quality assessment
+- Security considerations
+- Performance recommendations
+- Actionable improvement suggestions
 
 ### Context-Aware Questions
 

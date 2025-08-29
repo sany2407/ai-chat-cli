@@ -85,29 +85,81 @@ class ChatInterface {
     }
 
     /**
+     * Determine if the message is asking about the current project/codebase
+     * @param {string} message - User message
+     * @returns {boolean} True if message appears to be about the current project
+     */
+    isProjectRelatedQuery(message) {
+        const lowerMessage = message.toLowerCase();
+        
+        // Strong indicators that the question is about the current project
+        const projectIndicators = [
+            'this project', 'this code', 'this file', 'this repo', 'this repository',
+            'my project', 'my code', 'my file', 'my repo', 'my repository',
+            'current project', 'current code', 'current directory',
+            'explain this', 'analyze this', 'review this', 'what does this do',
+            'how does this work', 'what is this', 'describe this'
+        ];
+        
+        // Direct project-related keywords
+        const projectKeywords = [
+            'implement', 'fix', 'bug', 'refactor', 'improve', 'optimize',
+            'package.json', 'dependencies', 'scripts', 'build', 'test',
+            'function', 'class', 'component', 'module', 'variable',
+            'structure', 'architecture', 'setup', 'configuration'
+        ];
+        
+        // General knowledge indicators (should NOT use project context)
+        const generalKnowledgeIndicators = [
+            'what is artificial intelligence', 'what is ai', 'what is machine learning',
+            'what is programming', 'what is javascript', 'what is python',
+            'explain artificial intelligence', 'explain machine learning',
+            'how does ai work', 'how does machine learning work',
+            'define', 'tell me about', 'what are the benefits of',
+            'what are the advantages of', 'what are the disadvantages of'
+        ];
+        
+        // Check if it's a general knowledge question first
+        const isGeneralQuestion = generalKnowledgeIndicators.some(indicator => 
+            lowerMessage.includes(indicator)
+        );
+        
+        if (isGeneralQuestion) {
+            return false; // Don't use project context for general questions
+        }
+        
+        // Check for strong project indicators
+        const hasStrongProjectIndicator = projectIndicators.some(indicator => 
+            lowerMessage.includes(indicator)
+        );
+        
+        if (hasStrongProjectIndicator) {
+            return true; // Definitely about the project
+        }
+        
+        // Check for project keywords + has relevant files
+        const hasProjectKeywords = projectKeywords.some(keyword => 
+            lowerMessage.includes(keyword)
+        );
+        
+        return hasProjectKeywords && this.fileContextManager.hasRelevantFiles();
+    }
+
+    /**
      * Check if message needs context and process accordingly
      * @param {string} message - User message
      * @returns {Promise<string>} Processed message (with context if needed)
      */
     async processMessageWithContext(message) {
-        // Keywords that suggest the user wants project context
-        const contextKeywords = [
-            'project', 'code', 'file', 'files', 'repository', 'repo', 'structure',
-            'implement', 'fix', 'bug', 'function', 'class', 'component', 'module',
-            'package.json', 'readme', 'config', 'setup', 'build', 'test',
-            'explain this', 'analyze', 'review', 'refactor', 'improve'
-        ];
-        
-        const lowerMessage = message.toLowerCase();
-        const needsContext = contextKeywords.some(keyword => lowerMessage.includes(keyword)) ||
-                           this.fileContextManager.hasRelevantFiles();
+        const needsContext = this.isProjectRelatedQuery(message);
         
         if (needsContext) {
             console.log(chalk.gray('\n📁 Including project context for better assistance...'));
             return this.fileContextManager.getContextAwarePrompt(message);
+        } else {
+            // For general questions, just send the message as-is to the LLM
+            return message;
         }
-        
-        return message;
     }
 
     /**

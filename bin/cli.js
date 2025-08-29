@@ -70,8 +70,39 @@ program
         }
 
         const analysisPrompt = options.detailed 
-            ? 'Please provide a detailed analysis of this project including architecture, dependencies, code quality, potential improvements, and any issues you notice.'
-            : 'Please analyze this project structure and provide a summary of what this project does, its main technologies, and any notable observations.';
+            ? `Please provide a comprehensive analysis of this project with the following structure:
+
+**Project Overview:**
+- What this project does and its purpose
+- Main functionality and features
+
+**Technical Analysis:**
+- Programming language(s) and frameworks used
+- Dependencies and third-party libraries
+- Project structure and organization
+- Architecture patterns and design decisions
+
+**Code Quality Assessment:**
+- Code organization and maintainability
+- Error handling and best practices
+- Documentation quality
+- Testing coverage (if any)
+
+**Recommendations:**
+- Potential improvements
+- Security considerations
+- Performance optimizations
+- Missing features or functionality
+
+Please be specific and provide actionable insights.`
+            : `Please analyze this project and provide:
+
+**Summary:** What this project does and its main purpose
+**Technologies:** Programming languages, frameworks, and key dependencies
+**Structure:** How the code is organized and key components
+**Observations:** Notable features, patterns, or potential areas for improvement
+
+Keep it concise but informative.`;
             
         await chatInterface.sendSingleMessage(analysisPrompt);
     });
@@ -176,7 +207,7 @@ program.on('--help', () => {
     console.log('  ai-chat config --key YOUR_API_KEY       # Set API key');
     console.log('  ai-chat config --show                   # Show current config');
     console.log('  ai-chat chat                            # Start interactive chat');
-    console.log('  ai-chat ask "What is machine learning?" # Send single message');
+    console.log('  ai-chat ask "What is artificial intelligence?" # Send single message');
     console.log('  ai-chat analyze                         # Analyze current project');
     console.log('  ai-chat analyze --detailed              # Detailed project analysis');
     console.log('');
