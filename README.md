@@ -28,6 +28,12 @@ A powerful command-line chatbot powered by Google's Gemini AI. Chat with AI dire
 
 ## Installation
 
+### Clone this Repository
+
+```
+git clone https://github.com/sany2407/ai-chat-cli
+```
+
 ### Option 1: Global Installation (Recommended)
 
 ```bash
